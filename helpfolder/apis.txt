@@ -1,0 +1,25 @@
+/user
+
+
+Post
+body - {id , name  , username , password  , image , createdAt }  return token and username
+/login
+body - {  username  , password}  return token and username
+
+
+/group
+Post - { name , adminuser , user_id}
+
+/dashboard - list of groups
+
+/search-user - show list of users with username or name
+/send-request - group admin can send request to users 
+/accept-request - user accepts the group invitation , mapping to froup in mapping table { token(userid) , groupid }
+
+response pattern - 
+{
+    message:"success" , 
+    data:[{},{}] , 
+    statusCode:200,
+    error : null
+}

@@ -30,7 +30,22 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/pixshare-e2e/**/*"]
+      "exclude": ["apps/pixshare-e2e/**/*", "user-e2e/**/*", "group-e2e/**/*"]
     }
-  ]
+  ],
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "useDaemonProcess": true
+      }
+    }
+  },
+  "targetDefaults": {
+    "@nx/js:tsc": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    }
+  }
 }

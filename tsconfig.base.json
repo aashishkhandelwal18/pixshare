@@ -14,7 +14,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@pixshare/auth": ["auth/src/index.ts"],
+      "@pixshare/aws": ["libs/src/index.ts"],
+      "@pixshare/prisma": ["prisma/src/index.ts"],
+      "@pixshare/shared-dtos": ["shared-dtos/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

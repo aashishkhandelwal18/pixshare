@@ -1,0 +1,8 @@
+Local stack container Run - 
+sudo docker run --rm --name=localstack -p 4566:4566 -p 4571:4571  -v /var/run/docker.sock:/var/run/docker.sock  --env-file="./env.txt" localstack/localstack
+
+
+
+
+aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket image --region us-east-1
+AWS is a itself library in project in libs folder which have configuration with S3 , SNS and SQS with localstack

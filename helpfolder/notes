@@ -1,0 +1,37 @@
+PICSHARE - A microserviced containerized Application with DB postgres using prisma and neon using nest js with valid DTO and used gits for daily commits. User can create groups , it become admin of that group , user can send friend request , other user can accept the friend request so become part of that group
+
+
+USING NX - multi service
+npx create-nx-workspace@latest pixshare --preset=nest
+nx generate @nrwl/nest:app user
+nx generate @nrwl/nest:app group
+Running command - npx nx serve user
+
+
+prisma -
+npx prisma migrate dev --name update-schema --create-only
+npx prisma migrate dev
+npx prisma db push
+
+Database mapping
+TABLE --------------
+1) user
+2) group
+3) usergroupmapping
+
+User - 
+id
+name 
+username 
+image
+
+group -
+id
+name
+admin_user
+admin_name
+
+usergroupmapping - 
+id
+userid
+groupid

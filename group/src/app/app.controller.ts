@@ -2,15 +2,15 @@ import { Body, Controller, Get , Post , UseGuards , Headers } from '@nestjs/comm
 import { AppService } from './app.service';
 
 import { AuthService, JwtAuthGuard } from "@pixshare/auth"
-import { CreateGroupDto } from '@pixshare/shared-dtos';
+import { CreateGroupDto , CreateGroupResponseDto } from '@pixshare/shared-dtos';
+import { ApiResponse } from '@pixshare/shared-dtos'
 @Controller()
 export class AppController {
+  
   constructor(private readonly appService: AppService , private readonly authService: AuthService) {}
-
-
   @UseGuards(JwtAuthGuard)  
   @Post('/create-group')
-  async createGroup(@Body() createGroupDto : CreateGroupDto , @Headers('authorization') authHeader: string) : /*Promise<{ mappedUserGroup: { id: string; user_id: string; group_id: string; createdAt: Date; }; groupCreated: { id: string; createdAt: Date; name: string; admin_user: string; admin_name: string; }; }>*/ Promise<ApiResponse<>>  {
+  async createGroup(@Body() createGroupDto : CreateGroupDto , @Headers('authorization') authHeader: string) :  Promise<ApiResponse<CreateGroupResponseDto>>  {
     const token   = authHeader?.split(" ")[1]    
     const {username , sub : id} = this.authService.customDecode(token)
     const groupPayload = {
@@ -19,9 +19,8 @@ export class AppController {
       admin_name : username
     }   
     const {mappedUserGroup , groupCreated} = await this.appService.createGroup({data : groupPayload});
-    return {mappedUserGroup , groupCreated}
+    return {status : true, message : "group Created", data: {mappedUserGroup , groupCreated}}
   }
-
   // for dashboard
   @UseGuards(JwtAuthGuard)
   @Get('/fetch-group')

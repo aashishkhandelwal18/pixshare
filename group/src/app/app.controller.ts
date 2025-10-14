@@ -17,9 +17,15 @@ export class AppController {
       name : createGroupDto.name,
       admin_user : id,
       admin_name : username
-    }
-    
+    }   
     const {mappedUserGroup , groupCreated} = await this.appService.createGroup({data : groupPayload});
     return {mappedUserGroup , groupCreated}
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/fetch-group')
+  async fetchGroup(){
+    // code to fetch the groups on userid from mapped user (handle admin user also)
+  }
+
 }

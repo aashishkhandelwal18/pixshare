@@ -12,6 +12,8 @@ Post - { name , adminuser , user_id}
 
 /dashboard - list of groups
 
+/create-group - group {}     ,      
+
 /search-user - show list of users with username or name
 /send-request - group admin can send request to users 
 /accept-request - user accepts the group invitation , mapping to froup in mapping table { token(userid) , groupid }

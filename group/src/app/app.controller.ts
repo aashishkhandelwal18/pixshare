@@ -10,7 +10,7 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)  
   @Post('/create-group')
-  async createGroup(@Body() createGroupDto : CreateGroupDto , @Headers('authorization') authHeader: string) {
+  async createGroup(@Body() createGroupDto : CreateGroupDto , @Headers('authorization') authHeader: string) : Promise<{ mappedUserGroup: { id: string; user_id: string; group_id: string; createdAt: Date; }; groupCreated: { id: string; createdAt: Date; name: string; admin_user: string; admin_name: string; }; }>  {
     const token   = authHeader?.split(" ")[1]    
     const {username , sub : id} = this.authService.customDecode(token)
     const groupPayload = {
@@ -19,7 +19,7 @@ export class AppController {
       admin_name : username
     }
     
-    const groupCreated = this.appService.createGroup({data : groupPayload});
-    return groupCreated
+    const {mappedUserGroup , groupCreated} = await this.appService.createGroup({data : groupPayload});
+    return {mappedUserGroup , groupCreated}
   }
 }

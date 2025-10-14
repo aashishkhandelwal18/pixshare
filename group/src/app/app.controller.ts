@@ -10,7 +10,7 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)  
   @Post('/create-group')
-  async createGroup(@Body() createGroupDto : CreateGroupDto , @Headers('authorization') authHeader: string) : Promise<{ mappedUserGroup: { id: string; user_id: string; group_id: string; createdAt: Date; }; groupCreated: { id: string; createdAt: Date; name: string; admin_user: string; admin_name: string; }; }>  {
+  async createGroup(@Body() createGroupDto : CreateGroupDto , @Headers('authorization') authHeader: string) : /*Promise<{ mappedUserGroup: { id: string; user_id: string; group_id: string; createdAt: Date; }; groupCreated: { id: string; createdAt: Date; name: string; admin_user: string; admin_name: string; }; }>*/ Promise<ApiResponse<>>  {
     const token   = authHeader?.split(" ")[1]    
     const {username , sub : id} = this.authService.customDecode(token)
     const groupPayload = {
@@ -22,10 +22,11 @@ export class AppController {
     return {mappedUserGroup , groupCreated}
   }
 
+  // for dashboard
   @UseGuards(JwtAuthGuard)
   @Get('/fetch-group')
-  async fetchGroup(){
+  async fetchGroup(){    
     // code to fetch the groups on userid from mapped user (handle admin user also)
+    // Centralize the return response body accordin to the DTO's
   }
-
 }

@@ -19,8 +19,9 @@ export class AuthService {
     const payload = { username: user.username, sub: user.id };
     return { access_token: this.jwtService.sign(payload), };
   }
-  customDecode(token: string): any {
+  customDecode(authHeader: string): any {
     try {
+      const token   = authHeader?.split(" ")[1]    
       const payload = this.jwtService.verify(token);
       return payload;
     } catch (err) {

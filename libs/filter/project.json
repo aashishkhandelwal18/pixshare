@@ -1,0 +1,20 @@
+{
+  "name": "exception-filters",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/filter/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/filter",
+        "tsConfig": "libs/filter/tsconfig.lib.json",
+        "packageJson": "libs/filter/package.json",
+        "main": "libs/filter/src/index.ts",
+        "assets": ["libs/filter/*.md"]
+      }
+    }
+  }
+}

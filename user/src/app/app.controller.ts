@@ -25,7 +25,7 @@ export class AppController {
   @Post('/user')
   @UseInterceptors(FileInterceptor('image', { storage : multer.memoryStorage() }))
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
+  @ApiBody({  
     schema: {
       type: 'object',
       properties: {

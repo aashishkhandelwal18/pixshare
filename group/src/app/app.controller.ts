@@ -44,8 +44,3 @@ export class AppController {
     }
 }
 }
-
-// Worked on the fetch group API in which added handeling if no groups are there for that user.
-// Centalized the responses for the proper output and low chances of typo.
-// Done the group route with some extra handeling which I have searched.
-// Have to centralised the apps other modules and add exception handelings also. 

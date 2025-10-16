@@ -17,6 +17,7 @@
     "paths": {
       "@pixshare/auth": ["auth/src/index.ts"],
       "@pixshare/aws": ["libs/src/index.ts"],
+      "@pixshare/exception-filters": ["libs/filter/src/index.ts"],
       "@pixshare/prisma": ["prisma/src/index.ts"],
       "@pixshare/shared-constants": ["shared-constants/src/index.ts"],
       "@pixshare/shared-dtos": ["shared-dtos/src/index.ts"]

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post , UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Post , UnauthorizedException, UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common';
 import { AppService } from './app.service';
 
 import { RegisterDto } from './dto/register.dto'
@@ -39,71 +39,49 @@ export class AppController {
       },
     },
   })
-  async registerUser(@Body() registerDto : RegisterDto , @UploadedFile(FileValidationPipe) file: Express.Multer.File) : Promise<ApiResponse<RegisterResponseDto>>{
-    const userData = {
-      name: registerDto.name,
-      username: registerDto.username,
-      password: registerDto.password,
-      image: '' // Will be set by the service after S3 upload
-    };
-    const { username , user , token  } = await  this.appService.registerUser(userData, file)
-    if(username.length > 0 && username.length > 0){
-      return {
-        status: true,
-        message: "User Registered Successfully",
-        data : {
-          token : token,
-          user : user,
-          username : username
-        }
-      }
-    }else{
-      return {
-        status: false,
-        message: "Internal Server error",
 
-        data : {
-          token : "",
-          user : "",
-          username : ""
-        }
+  async registerUser(@Body() registerDto : RegisterDto , @UploadedFile(FileValidationPipe) file: Express.Multer.File) : Promise<ApiResponse<RegisterResponseDto>>{
+    try{
+      const userData = {
+        name: registerDto.name,
+        username: registerDto.username,
+        password: registerDto.password,
+        image: '' // Will be set by the service after S3 upload
+      };
+      const { username , user , token  } = await  this.appService.registerUser(userData, file)
+      if(username.length > 0 && username.length > 0){
+        return {status: true,message: "User Registered Successfully",data : {token : token,user : user,username : username}}
+      }else{
+        return {status: false,message: "Internal Server error",data : {token : "",user : "",username : ""}}
       }
+    }catch(er){
+            throw new NotFoundException(`Error in the register user controller : ${er}`)
     }
   }
 
   @Post('/login')
   async loginUser(@Body() loginDto : LoginDto) : Promise<ApiResponse<RegisterResponseDto>>{
-    const { username , user , token  } = await  this.appService.loginUser(loginDto)
-    if(username.length > 0 && username.length > 0){
-      return {
-        status: true,
-        message: "User Login Successfully",
-        data : {
-          token : token,
-          user : user,
-          username : username
-        }
+    try{
+      const { username , user , token  } = await  this.appService.loginUser(loginDto)
+      console.log(`username`)
+      console.log(username)
+      if(username?.length > 0 && username?.length > 0){
+        return {status: true,message: "User Login Successfully",data : {  token : token,  user : user,  username : username}}
+      }else{
+        throw new UnauthorizedException()
       }
-    }else{
-      return {
-        status: false,
-        message: "Internal Server error",
-
-        data : {
-          token : "",
-          user : "",
-          username : ""
-        }
-      }
+    }catch(er){
+        throw new UnauthorizedException("Invalid creds: ")
     }
   }
-
 
   @Get('/getusers')
   @UseGuards(JwtAuthGuard)
   async getUser() {
-    const users = await  this.appService.getUser()
-    return users
+    return await  this.appService.getUser()
   }
-
 }
+// Improve the respnses of the API majorly login and register.
+// Started creating the new workflow for the sending request .
+// Integrated SNS and SQS for the messaging between both services.
+// For next working day have to Integrate the API which can send message to queue.

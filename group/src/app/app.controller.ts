@@ -1,4 +1,4 @@
-import { Body, Controller, Get , Post , UseGuards , Headers, Req } from '@nestjs/common';
+import { Body, Controller, Get , Post , UseGuards , Headers, Req, NotFoundException, BadRequestException } from '@nestjs/common';
 import { AppService } from './app.service';
 
 import { AuthService, JwtAuthGuard } from "@pixshare/auth"
@@ -14,15 +14,19 @@ export class AppController {
   @UseGuards(JwtAuthGuard)  
   @Post('/create-group')
   async createGroup(@Body() createGroupDto : CreateGroupDto , @Headers('authorization') authHeader: string , @Req() req: Request  ) :  Promise<ApiResponse<CreateGroupResponseDto>>  {
-    
-    const {username , sub : id} = this.authService.customDecode(authHeader)
-    const groupPayload = {
-      name : createGroupDto.name,
-      admin_user : id,
-      admin_name : username
+    try{
+
+      const {username , sub : id} = this.authService.customDecode(authHeader)
+      const groupPayload = {
+        name : createGroupDto.name,
+        admin_user : id,
+        admin_name : username
+      }   
+      const {mappedUserGroup , groupCreated} = await this.appService.createGroup({data : groupPayload});
+      return {status : true, message : ResponseMessage.group.CREATED, data: {mappedUserGroup , groupCreated}}
+    } catch(er){
+        throw new NotFoundException("error in create group" + er)
     }   
-    const {mappedUserGroup , groupCreated} = await this.appService.createGroup({data : groupPayload});
-    return {status : true, message : ResponseMessage.group.CREATED, data: {mappedUserGroup , groupCreated}}
   }
 
   // for dashboard
@@ -36,11 +40,12 @@ export class AppController {
       if(groupList.length > 0){
         return { status : true , message : ResponseMessage.group.LIST , data :groupList} 
       }else{ 
-
         return { status : true , message : ResponseMessage.group.NOGROUPFOUND , data :[]}                               
       }  
     }catch(er){
       console.log(`Error in group controller : ${er}`)
+      throw new BadRequestException(`Error in group controller : ${er}`)
     }
 }
 }
+

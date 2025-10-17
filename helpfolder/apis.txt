@@ -25,3 +25,6 @@ response pattern -
     statusCode:200,
     error : null
 }
+TODO -
+how to use - app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })); 
+Swagger
